@@ -272,11 +272,21 @@ OPTIONAL
 
 An object that indicates a set of values accepted by the API for the given field. The value submitted MUST be one of the `value` properties from the list of `values` or `groupedValues`. The `values` and `groupedValues` properties MUST NOT appear at the same time in an `accepted` object within a field.
 
+#### multiple
+
+OPTIONAL
+
+A boolean value which indicates whether multiple values MAY be submitted for the field. Defaults to `false` if not provided, meaning multiple values MUST NOT be submitted. If provided and `true`, values MUST be submitted as a collection/array of values.
+
 #### values
+
+OPTIONAL
 
 A collection of [value objects](#value-object).
 
 #### groupedValues
+
+OPTIONAL
 
 A collections of [grouped value objects](#grouped-value-object).
 

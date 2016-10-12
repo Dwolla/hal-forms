@@ -30,6 +30,11 @@ This extension is to be used as a profile link ([RFC6906](https://tools.ietf.org
   },
   "_forms": {
     "default": {
+      "_links": {
+        "target": {
+          "href": "http://api.example.com/customers"
+        }
+      },
       "method": "POST",
       "contentType": "application/hal+json",
       "fields": [
@@ -138,13 +143,13 @@ This extension is to be used as a profile link ([RFC6906](https://tools.ietf.org
 
 ## _links
 
-Link attributes follow the same semantics as defined in the HAL specification [section 5](http://tools.ietf.org/html/draft-kelly-json-hal-06#section-5). For completeness, the required elements are all represented below.
+Link attributes follow the same semantics as defined in the HAL specification [section 5](http://tools.ietf.org/html/draft-kelly-json-hal-06#section-5).
 
-#### self
+* **self**
 
-The "self" link relation is REQUIRED.
+  REQUIRED
 
-Links to the resource that should be posted to with the resource defined by the form.
+  The resource that is being queried or modified.
 
 ## _forms
 
@@ -153,6 +158,18 @@ REQUIRED
 An object containing one or many forms, denoted by key/value. Each key inside the `_forms` object MUST describe the form defined in its value. If only one form is returned, the keyword `default` SHOULD be used. It's RECOMMENDED to use keys that are verb-like in form (e.g., "create-customer", "search-customers") in order to provide context as to what the form is intended for.
 
 ### Form object
+
+#### _links
+
+REQUIRED
+
+A set of links that describe the individual form.
+
+* **target**
+
+  REQUIRED
+
+  A link that describes where to submit the form.
 
 #### method
 

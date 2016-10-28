@@ -58,6 +58,15 @@ This extension is to be used as a profile link ([RFC6906](https://tools.ietf.org
           }
         },
         {
+          "name": "password",
+          "path": "/password",
+          "type": "sensitive",
+          "displayText": "Password",
+          "validations": {
+            "required": true
+          }
+        },
+        {
           "name": "businessType",
           "path": "/businessType",
           "type": "string",
@@ -244,6 +253,7 @@ Possible types:
 * number
 * string
 * tel
+* sensitive
 
 ### displayText
 

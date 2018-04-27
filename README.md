@@ -356,7 +356,7 @@ Possible types at this time:
 
 * `email`
 
-  Email address. Clients SHOULD encode email addresses as [RFC 6068 mailto URIs](https://tools.ietf.org/html/rfc6068). Servers MUST accept [RFC 6068 mailto URIs](https://tools.ietf.org/html/rfc6068) and bare email addresses.
+  Email address. Clients SHOULD encode email addresses as [RFC 6068 mailto URIs](https://tools.ietf.org/html/rfc6068). Servers MUST accept [RFC 6068 mailto URIs](https://tools.ietf.org/html/rfc6068). Servers SHOULD make a best effort attempt to extract an email addres even if the value is not a `mailto` URI.
   
   #### JSON encoding
   
@@ -368,7 +368,7 @@ Possible types at this time:
 
 * `tel`
   
-  Telephone numbers. Clients SHOULD encode telephone numbers as [RFC 3966 telephone URIs](https://tools.ietf.org/html/rfc3966). Servers MUST accept [RFC 3966 telephone URIs](https://tools.ietf.org/html/rfc3966). Servers SHOULD make a best effort attempt to extract a phone whatever string is sent from the client.
+  Telephone numbers. Clients SHOULD encode telephone numbers as [RFC 3966 telephone URIs](https://tools.ietf.org/html/rfc3966). Servers MUST accept [RFC 3966 telephone URIs](https://tools.ietf.org/html/rfc3966). Servers SHOULD make a best effort attempt to extract a phone  number from value even if it is not a `tel` URI.
   
   #### JSON Encoding
   
@@ -382,14 +382,18 @@ Possible types at this time:
 
   File picker. Value will be the contents of the selected file.
   
+  Forms using this field type MUST be use `multipart/form-data` as their `contentType`.
+  
   #### JSON encoding
   
-  String containing the contents of the file base64 encoded.
+  Unsupported. This field type MUST NOT be used with JSON encoding.
   
   #### Form Encoding
 
-  String containing the contents of the file base64 encoded.
+  Contents of file as a part as define by [RFC 7578](https://tools.ietf.org/html/rfc7578)
 
+
+  
 ### displayText
 
 OPTIONAL

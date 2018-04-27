@@ -198,7 +198,7 @@ REQUIRED
 
 A collection of [field objects](#field-object).
 
-###<a name="field-object"></a> Field object
+### <a name="field-object"></a> Field object
 
 A field object describes a value that MAY be submitted to the API.
 
@@ -242,18 +242,153 @@ The current/persisted value of the field.
 
 REQUIRED
 
-Indicates the type of value represented by the field. This can be used as a hint when generating inputs based on the field definition.
+Provides a hint indicating the type of values of this field and what UI element(s) would be appropriate to present to the user. This list MAY expand over time. Clients SHOULD treat unrecognized field types as `string`.
 
-Possible types:
+Possible types at this time:
 
-* boolean
-* date
-* email
-* file
-* number
-* string
-* tel
+* `boolean`
+
+  True or false value.
+  
+  #### JSON Encoding
+  
+  Builtin boolean data type
+  
+  #### Form Encoding
+  
+  `true` and `false`
+  
+* `number`
+
+  Arbitrary precision decimal numbers.
+
+  #### JSON encoding
+
+  Builtin number datatype.
+  
+  #### Form Encoding
+  
+  UTF-8 decimal number.
+
+* `string`
+  
+  Short, probably single series of characters.
+  
+  #### JSON Encoding
+
+  Builtin string datatype.
+  
+  #### Form Encoding
+  
+  UTF-8 encoded characters.
+
+* `date`
+
+   Calendar date encoding a specific year, month and day. Dates are independent of time zones.
+   
+   #### JSON Encoding
+   
+   String containing exactly the [ISO 8601 encoded calendar date](https://en.wikipedia.org/wiki/ISO_8601#Calendar_dates)
+   
+   #### Form Encoding
+   
+   [ISO 8601 encoded calendar date](https://en.wikipedia.org/wiki/ISO_8601#Calendar_dates)
+    
+* `time`
+
+  Time of day. Times MAY specify a time zone.
+
+  #### JSON Encoding
+  
+  String containing exactly the [ISO 8601 encoded time](https://en.wikipedia.org/wiki/ISO_8601#Times)
+  
+  #### Form Encoding
+  
+  [ISO 8601 encoded time](https://en.wikipedia.org/wiki/ISO_8601#Times)
+  
+* `datetime`
+
+  Calendar date and time. Datetimes MAY specify a time zone.
+
+  #### JSON encoding
+  
+  String containing exactly the [ISO 8601 encoded date time](https://en.wikipedia.org/wiki/ISO_8601#Combined_date_and_time_representations)
+  
+  #### Form Encoding
+  
+  [ISO 8601 encoded date time](https://en.wikipedia.org/wiki/ISO_8601#Combined_date_and_time_representations)
+  
 * sensitive
+
+  `string` whose value should be obscured in the user interfaces and logs.
+  
+  #### JSON Encoding
+  
+  Builtin string datatype.
+  
+  #### Form Encoding
+  
+  UTF-8 encoded characters.
+
+* hidden
+  
+  Values needed by the form target but that is not user editable.
+  
+  #### JSON Encoding
+  
+  Use the field `value` verbatim.
+  
+  #### Form Encoding
+  
+  Convert field `value` to UTF-8 based on form encoding rule for the datatype of the field `value`
+  
+* text
+  
+  Potentially long, multi-line string. Analogous to textarea in HTML.
+  
+  #### JSON Encoding
+  
+  Builtin string datatype.
+  
+  #### Form Encoding
+  
+  UTF-8 encoded characters.
+
+* `email`
+
+  Email address. Clients SHOULD encode email addresses as [RFC 6068 mailto URIs](https://tools.ietf.org/html/rfc6068). Servers MUST accept [RFC 6068 mailto URIs](https://tools.ietf.org/html/rfc6068) and bare email addresses.
+  
+  #### JSON encoding
+  
+  String containing exactly an [RFC 6068 mailto URI](https://tools.ietf.org/html/rfc6068)
+  
+  #### Form Encoding
+  
+  [RFC 6068 mailto URI](https://tools.ietf.org/html/rfc6068)
+
+* `tel`
+  
+  Telephone numbers. Clients SHOULD encode telephone numbers as [RFC 3966 telephone URIs](https://tools.ietf.org/html/rfc3966). Servers MUST accept [RFC 3966 telephone URIs](https://tools.ietf.org/html/rfc3966). Servers SHOULD make a best effort attempt to extract a phone whatever string is sent from the client.
+  
+  #### JSON Encoding
+  
+  String containing exactly an [RFC 3966 telephone URI](https://tools.ietf.org/html/rfc3966)
+  
+  #### Form Encoding
+  
+  [RFC 3966 telephone URI](https://tools.ietf.org/html/rfc3966)
+  
+* `file`
+
+  File picker. Value will be the contents of the selected file.
+  
+  #### JSON encoding
+  
+  String containing the contents of the file base64 encoded.
+  
+  #### Form Encoding
+
+  String containing the contents of the file base64 encoded.
 
 ### displayText
 
@@ -300,7 +435,7 @@ OPTIONAL
 
 A collections of [grouped value objects](#grouped-value-object).
 
-###<a name="value-object"></a> Value object
+### <a name="value-object"></a> Value object
 
 #### value
 
@@ -320,7 +455,7 @@ OPTIONAL
 
 A string that describes the value. This MAY be used in place of a client's own display text for the accepted value.
 
-###<a name="grouped-value-object"></a> Grouped value object
+### <a name="grouped-value-object"></a> Grouped value object
 
 #### key
 

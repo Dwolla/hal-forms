@@ -192,6 +192,10 @@ REQUIRED
 
 The media type the API requires when submitting the resource generated from the form. This should be the value of the `Content-Type` header.
 
+Clients MUST accept `application/x-www-form-urlencoded`, `multipart/form-data`, `application/json` and any media type ending in `+json`. Servers SHOULD NOT use media types outside this set.
+
+Clients MUST follow JSON encoding rules for media types ending in `+json`.
+
 ### fields
 
 REQUIRED

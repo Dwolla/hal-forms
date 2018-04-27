@@ -252,7 +252,7 @@ Possible types at this time:
   
   #### JSON Encoding
   
-  Builtin boolean data type
+  Built-in boolean data type.
   
   #### Form Encoding
   
@@ -264,19 +264,19 @@ Possible types at this time:
 
   #### JSON encoding
 
-  Builtin number datatype.
+  Built-in number datatype.
   
   #### Form Encoding
   
-  UTF-8 decimal number.
+  UTF-8 encoded decimal number.
 
 * `string`
   
-  Short, probably single series of characters.
+  Short, probably single line, series of characters.
   
   #### JSON Encoding
 
-  Builtin string datatype.
+  Built-in string datatype.
   
   #### Form Encoding
   
@@ -284,7 +284,7 @@ Possible types at this time:
 
 * `date`
 
-   Calendar date encoding a specific year, month and day. Dates are independent of time zones.
+   Calendar date representing a specific year, month and day. Dates are independent of time zones.
    
    #### JSON Encoding
    
@@ -324,7 +324,7 @@ Possible types at this time:
   
   #### JSON Encoding
   
-  Builtin string datatype.
+  Built-in string datatype.
   
   #### Form Encoding
   
@@ -332,7 +332,7 @@ Possible types at this time:
 
 * hidden
   
-  Values needed by the form target but that is not user editable.
+  Field needed by the form's target but that is not user editable.
   
   #### JSON Encoding
   
@@ -340,15 +340,15 @@ Possible types at this time:
   
   #### Form Encoding
   
-  Convert field `value` to UTF-8 based on form encoding rule for the datatype of the field `value`
+  Use form encoding rule for the field `value`'s datatype.
   
 * text
   
-  Potentially long, multi-line string. Analogous to textarea in HTML.
+  Potentially long, multi-line, string. Analogous to textarea in HTML.
   
   #### JSON Encoding
   
-  Builtin string datatype.
+  Built-in string datatype.
   
   #### Form Encoding
   
@@ -356,7 +356,7 @@ Possible types at this time:
 
 * `email`
 
-  Email address. Clients SHOULD encode email addresses as [RFC 6068 mailto URIs](https://tools.ietf.org/html/rfc6068). Servers MUST accept [RFC 6068 mailto URIs](https://tools.ietf.org/html/rfc6068). Servers SHOULD make a best effort attempt to extract an email addres even if the value is not a `mailto` URI.
+  Email address. Clients SHOULD encode email addresses as [RFC 6068 mailto URIs](https://tools.ietf.org/html/rfc6068). Servers MUST accept [RFC 6068 mailto URIs](https://tools.ietf.org/html/rfc6068). Servers SHOULD make a best effort attempt to extract an email address even if the value is not a `mailto` URI.
   
   #### JSON encoding
   
@@ -382,7 +382,7 @@ Possible types at this time:
 
   File picker. Value will be the contents of the selected file.
   
-  Forms using this field type MUST be use `multipart/form-data` as their `contentType`.
+  Forms using this field type MUST use `multipart/form-data` as their `contentType`.
   
   #### JSON encoding
   
@@ -390,10 +390,9 @@ Possible types at this time:
   
   #### Form Encoding
 
-  Contents of file as a part as define by [RFC 7578](https://tools.ietf.org/html/rfc7578)
+  Attach contents of file as one part of the multipart document as define by [RFC 7578](https://tools.ietf.org/html/rfc7578)
 
 
-  
 ### displayText
 
 OPTIONAL

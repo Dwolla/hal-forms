@@ -162,7 +162,7 @@ This spec extends the HAL format by adding the reserved property `_forms`. This 
 
    - `default` ([form](#form), optional)
 
-     The default form for the context. MAY be used when only one form makes sense in the context.
+     The default form for the context. API providers SHOULD use this to indicate the best form for consumers with limited domain knowledge.
 
    - *form id(custom string)* ([form](#form), optional)
 
@@ -170,7 +170,7 @@ This spec extends the HAL format by adding the reserved property `_forms`. This 
 
 ## <a id="form"/> Form (object)
 
-A form object is a recipe for how to make a complex API requests.
+A form object is a recipe for making complex API requests.
 
 ### Properties
 
@@ -185,19 +185,18 @@ A form object is a recipe for how to make a complex API requests.
 
    Value MUST be one of the following:
    - `GET`
-   - `PUT`
-   - `POST`
+   - `DELETE`
    - `PATCH`
+   - `POST`
+   - `PUT`
 
  - `contentType` (string, optional)
 
-   The media type the API requires when submitting the resource generated from the form. This should be the value of the `Content-Type` header. The `contentType` property is REQUIRED when `method` is anything except `GET`.
+   The media type of submissions required by the target resource. This should be the value of the `Content-Type` header. The `contentType` property is REQUIRED when `method` is  `PATCH`, `POST` or `PUT`.
 
    Clients MUST accept `application/x-www-form-urlencoded`, `multipart/form-data`, `application/json` and any media type ending in `+json`. Servers SHOULD NOT use media types outside this set.
 
    Clients MUST follow JSON encoding rules for media types ending in `+json`.
-
-   The HTTP method to be used when submitting the resource generated from the form.
 
  - `fields` (array[[field](#field)], required)
 
@@ -226,11 +225,11 @@ Example field object
 
  - `name` (string, required)
 
-   Identifies the field. Consumers SHOULD use this to locate fields of interest.
+   Identifies the field. Consumers MAY use this to locate fields of interest.
 
  - `path` (string, optional)
 
-   A JSON Pointer ([RFC6901](http://tools.ietf.org/html/rfc6901)) to a field in a resource typically being created as a result of a submission to the API. The `path` property is REQUIRED when `contentType` is JSON. The `path` property SHOULD be omitted when the form's `method` is `GET` or the `contentType` is `application/x-www-form-urlencoded` or `multipart/form-data`.
+   A JSON Pointer ([RFC6901](http://tools.ietf.org/html/rfc6901)) to a field in a resource typically being created as a result of a submission to the API. The `path` property is REQUIRED when `contentType` is JSON. The `path` property SHOULD be omitted when the form's `method` is `GET` or `DELETE` or the `contentType` is `application/x-www-form-urlencoded` or `multipart/form-data`.
 
  - value (*, required)
 
@@ -388,11 +387,11 @@ Example field object
 
  - `displayText` (string, optional)
 
-   A human readable string that describes the field. This MAY be used in place of a client's own display text. Clients SHOULD use `name` if this is missing.
+   A human readable string that describes the field. This SHOULD be used in place of a client's own display text. Clients SHOULD use `name` if this is missing.
 
  - `validations` ([validation](#validation), optional)
 
-   An object with rules specifying how value of the field MAY be validated.
+   An object with rules specifying how values of the field MAY be validated.
 
  - `accepted` (object, optional)
 
@@ -401,7 +400,7 @@ Example field object
    - One Of
      - `values` (array[[value](#value)], required)
 
-       Simple list of values acceptable values.
+       Simple list of acceptable values.
 
      - `groupedValues` (array[[value group](#value-group)], required)
 
@@ -427,11 +426,11 @@ Example validation object
 
  - `required` (boolean, optional)
 
-   True indicates that this field is required in submitted forms. Default value is false.
+   True indicates that forms submitted without a value for this field will be rejected by the API provider. API consumers SHOULD treat this as false if it is absent.
 
  - `regex` (string, optional)
 
-   A [Perl compatible regular expression](https://en.wikipedia.org/wiki/Perl_Compatible_Regular_Expressions) describing allowed syntax of this field's values. API consumers MUST ignore this property unless the field type is `string` or `text`
+   A [Perl compatible regular expression](https://en.wikipedia.org/wiki/Perl_Compatible_Regular_Expressions) describing allowed syntax of this field's values. API providers SHOULD omit this property unless the field type is `string` or `text`. API consumers MUST ignore this property unless the field type is `string` or `text`
 
 
 ## <a id="value-group"/> Value group (object)
@@ -462,7 +461,7 @@ Example of value group
 ### Properties
  - `key` (string, required)
 
-   An identifier for the value. Consumers MAY use this for identification and display.
+   An identifier for the group of values. Consumers MAY use this for identification and display.
 
  - `displayText` (string, optional)
 
@@ -470,7 +469,7 @@ Example of value group
 
  - `values` (array[[value](#value)], required)
 
-   List of sub-values, one of which must be used in the form submission if this value is selected.
+   List of values, one of which must be used in the form submission if this value group is selected.
 
 
 ## <a id="value"/> Value (object)

@@ -458,6 +458,29 @@ The submission requests MUST
 
 The target of a form MAY be a [templated link](https://tools.ietf.org/html/draft-kelly-json-hal-08#section-5.2). When this is the case the template must be expanded using the form fields in order to resolve it into a actual URL. Form fields must be converted in to a set of variable definitions whose values are the field values encoded using the [form value transcoding rules](#value-transcoding). The templated is then expanded using that set of variable definitions using the process define by [RFC 6570](https://tools.ietf.org/html/rfc6570).
 
+For example, this form
+```json
+{ "_links": {
+    "target" : {
+      "href": "http://example.com/customers{?cust_id,name}",
+      "templated": true
+    }
+  },
+  "contentType": "application/x-www-form-urlencoded",
+  "method": "GET",
+  "fields": [
+    { "name": "cust_id",
+      "type": "string" },
+    { "name": "name",
+      "type": "string" }
+  ]
+}
+```
+might resolve to any of the following
+ - `http://example.com/customers?cust_id=42`
+ - `http://example.com/customers?name=frolic`
+ - `http://example.com/customers?cust_id=42&name=frolic`
+
 A field MAY be used in both URL expansion and body construction.
 
 If the target link is not templated it's `href` MUST be used verbatim.
@@ -469,6 +492,52 @@ If the form's method allows a body (`PUT`, `POST` or `PATCH`) then the form is u
 #### Form transcoding
 
 Form encoding applies to forms whose `contentType` is `application/x-www-form-urlencoded` or `multipart/form-data`. For form encoding each field of the form is as a name-value pair. Values are converted into a string base on type specific rules specified below. The resulting name-value pairs are then encoding following common encoding rules for `application/x-www-form-urlencoded` or [RFC7578](https://tools.ietf.org/html/rfc7578) for `multipart/form-data`.
+
+For example, the following `x-www-form-urlencoded` form
+```json
+{ "_links": { "target" : { "href": "http://example.com" } },
+  "contentType": "application/x-www-form-urlencoded",
+  "method": "POST",
+  "fields": [
+    { "name": "title",
+      "type": "string" },
+    { "name": "recommended",
+      "type": "boolean" }
+  ]
+}
+```
+
+might encode into this body
+```
+title=User+Provided+Title&recommended=true
+```
+
+With similar user input the following `form-data` form
+```json
+{ "_links": { "target" : { "href": "http://example.com" } },
+  "contentType": "multipart/form-data",
+  "method": "POST",
+  "fields": [
+    { "name": "title",
+      "type": "string" },
+    { "name": "recommended",
+      "type": "boolean" }
+  ]
+}
+```
+
+encodes into this body
+```
+--AaB03x
+content-disposition: form-data; name="title"
+
+User Provided Title
+--AaB03x
+content-disposition: form-data; name="recommended"
+
+true
+--AaB03x
+```
 
 ##### Value transcoding
  - `boolean`
@@ -525,6 +594,33 @@ Form encoding applies to forms whose `contentType` is `application/x-www-form-ur
 
 JSON transcoding applies to forms whose `contentType` is `application/json` or any media type ending in `+json`. Field values are converted into a native JSON data type using the value trancoding rules below. Those encoded values are then added to a JSON document at the location indicated by the `path` of the [field](#field-object). The body is complete once all fields have been inserted.
 
+For example, the following JSON form
+```json
+{ "_links": { "target" : { "href": "http://example.com" } },
+  "contentType": "application/x-www-form-urlencoded",
+  "method": "POST",
+  "fields": [
+    { "name": "title",
+      "type": "string",
+      "path": "/title" },
+    { "name": "recommended",
+      "type": "boolean",
+      "path": "/superfluous/nesting/recommended" }
+  ]
+}
+```
+
+would encode into this body
+```
+{ "title": "User Provided Title",
+  "superfluous": {
+    "nesting": {
+      "recommended": true
+    }
+  }
+}
+```
+
 ##### Value transcoding
 
  - `boolean`
@@ -575,7 +671,6 @@ JSON transcoding applies to forms whose `contentType` is `application/json` or a
    Unsupported. This field type MUST NOT be used with a JSON `contentType`.
 
 
- 
 
 [link object]: https://tools.ietf.org/html/draft-kelly-json-hal-08#page-4
 

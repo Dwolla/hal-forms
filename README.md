@@ -10,11 +10,13 @@ The [Dwolla API](https://docsv2.dwolla.com) uses the [HAL spec](https://tools.ie
 
 The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in [RFC2119](https://tools.ietf.org/html/rfc2119).
 
+JSON format is described using [MSON](https://github.com/apiaryio/mson).
+
 ## Media Type
 
 This extension is to be used as a profile link ([RFC6906](https://tools.ietf.org/html/rfc6906)) in conjunction with a HAL style media type.
 
-######Examples
+Examples
 
 * `application/hal+json; profile="https://github.com/dwolla/hal-forms"`
 * `application/vnd.dwolla.v1.hal+json; profile="https://github.com/dwolla/hal-forms"`
@@ -150,267 +152,269 @@ This extension is to be used as a profile link ([RFC6906](https://tools.ietf.org
 }
 ```
 
-## _links
+## HAL document form extension (object)
 
-Link attributes follow the same semantics as defined in the HAL specification [section 5](http://tools.ietf.org/html/draft-kelly-json-hal-06#section-5).
+This spec extends the HAL format by adding the reserved property `_forms`. This property MAY appear on any HAL document (including embedded HAL documents).
 
-* **self**
+### Properties
 
-  REQUIRED
+ - `_forms` (object, optional)
 
-  The resource that is being queried or modified.
+   - `default` ([form](#form), optional)
 
-## _forms
+     The default form for the context. API providers SHOULD use this to indicate the best form for consumers with limited domain knowledge.
 
-REQUIRED
+   - *form id(custom string)* ([form](#form), optional)
 
-An object containing one or many forms, denoted by key/value. Each key inside the `_forms` object MUST describe the form defined in its value. If only one form is returned, the keyword `default` SHOULD be used. It's RECOMMENDED to use keys that are verb-like in form (e.g., "create-customer", "search-customers") in order to provide context as to what the form is intended for.
+     A form related to the context. A verb first clauses expressing a command (such as, `create-customer`, `search-customers`) is RECOMMENDED for *form id*.
 
-### Form object
+## <a id="form"/> Form (object)
 
-#### _links
+A form object is a recipe for making complex API requests.
 
-REQUIRED
+### Properties
 
-A set of links that describe the individual form.
+ - `_links`
+   - `target` ([link object][], required)
 
-* **target**
+     The resource which accepts submission of this form.
 
-  REQUIRED
+ - `method` (enum, required)
 
-  A link that describes where to submit the form.
+   The HTTP method to use when submitting this form. Consumers MUST ignore case of values.
 
-#### method
+   Value MUST be one of the following:
+   - `GET`
+   - `DELETE`
+   - `PATCH`
+   - `POST`
+   - `PUT`
 
-REQUIRED
+ - `contentType` (string, optional)
 
-The HTTP method to be used when submitting the resource generated from the form.
+   The media type of submissions required by the target resource. This should be the value of the `Content-Type` header. The `contentType` property is REQUIRED when `method` is  `PATCH`, `POST` or `PUT`.
 
-#### contentType
+   Clients MUST accept `application/x-www-form-urlencoded`, `multipart/form-data`, `application/json` and any media type ending in `+json`. Servers SHOULD NOT use media types outside this set.
 
-REQUIRED
+   Clients MUST follow JSON encoding rules for media types ending in `+json`.
 
-The media type the API requires when submitting the resource generated from the form. This should be the value of the `Content-Type` header.
+ - `fields` (array[[field](#field)], required)
 
-Clients MUST accept `application/x-www-form-urlencoded`, `multipart/form-data`, `application/json` and any media type ending in `+json`. Servers SHOULD NOT use media types outside this set.
+   The fields in this form.
 
-Clients MUST follow JSON encoding rules for media types ending in `+json`.
+## <a name="field"></a> Field (object)
 
-### fields
+A field object describes a value that can be submitted as part of this form.
 
-REQUIRED
-
-A collection of [field objects](#field-object).
-
-### <a name="field-object"></a> Field object
-
-A field object describes a value that MAY be submitted to the API.
-
-### name
-
-REQUIRED
-
-The value of the property in the object being submitted to the API.
-
-If a field is defined as follows:
+Example field object
 
 ```json
 {
-  "name": "firstName",
-  "path": "/firstName",
-  "type": "string"
+  "name": "name",
+  "path": "/name",
+  "type": "string",
+  "value": "Dwolla",
+  "displayText": "Name",
+  "validations": {
+    "required": true
+  }
 }
 ```
 
-Then the API is expecting an object that MAY contain `firstName`.
+### Properties
 
-```json
-{
-  "firstName": "Jane Doe"
-}
-```
+ - `name` (string, required)
 
-### path
+   Identifies the field. Consumers MAY use this to locate fields of interest.
 
-OPTIONAL
+ - `path` (string, optional)
 
-A JSON Pointer ([RFC6901](http://tools.ietf.org/html/rfc6901)) to a field in a resource typically being created as a result of a submission to the API. The `path` property MAY be omitted when the submission results in a query instead of a new resource.
+   A JSON Pointer ([RFC6901](http://tools.ietf.org/html/rfc6901)) to a field in a resource typically being created as a result of a submission to the API. The `path` property is REQUIRED when `contentType` is JSON. The `path` property SHOULD be omitted when the form's `method` is `GET` or `DELETE` or the `contentType` is `application/x-www-form-urlencoded` or `multipart/form-data`.
 
-### value
+ - value (*, required)
 
-OPTIONAL
+   The current/persisted value of the field.
 
-The current/persisted value of the field.
+ - `type` (enum, required)
 
-### type
+   Provides a hint indicating the type of values of this field and what UI element(s) would be appropriate to present to the user. This list MAY expand over time. Clients SHOULD treat unrecognized field types as `string`.
 
-REQUIRED
+   Possible types at this time:
+   - `boolean`
+     True or false value.
 
-Provides a hint indicating the type of values of this field and what UI element(s) would be appropriate to present to the user. This list MAY expand over time. Clients SHOULD treat unrecognized field types as `string`.
+     #### JSON Encoding
 
-Possible types at this time:
+     Built-in boolean data type.
 
-* `boolean`
+     #### Form Encoding
 
-  True or false value.
-  
-  #### JSON Encoding
-  
-  Built-in boolean data type.
-  
-  #### Form Encoding
-  
-  `true` and `false`
-  
-* `number`
+     `true` and `false`
 
-  Arbitrary precision decimal numbers.
+   - `number`
 
-  #### JSON encoding
+     Arbitrary precision decimal numbers.
 
-  Built-in number datatype.
-  
-  #### Form Encoding
-  
-  UTF-8 encoded decimal number.
+     #### JSON encoding
 
-* `string`
-  
-  Short, probably single line, series of characters.
-  
-  #### JSON Encoding
+     Built-in number datatype.
 
-  Built-in string datatype.
-  
-  #### Form Encoding
-  
-  UTF-8 encoded characters.
+     #### Form Encoding
 
-* `date`
+     UTF-8 encoded decimal number.
 
-   Calendar date representing a specific year, month and day. Dates are independent of time zones.
-   
-   #### JSON Encoding
-   
-   String containing exactly the [ISO 8601 encoded calendar date](https://en.wikipedia.org/wiki/ISO_8601#Calendar_dates)
-   
-   #### Form Encoding
-   
-   [ISO 8601 encoded calendar date](https://en.wikipedia.org/wiki/ISO_8601#Calendar_dates)
-    
-* `time`
+   - `string`
 
-  Time of day. Times MAY specify a time zone.
+     Short, probably single line, series of characters.
 
-  #### JSON Encoding
-  
-  String containing exactly the [ISO 8601 encoded time](https://en.wikipedia.org/wiki/ISO_8601#Times)
-  
-  #### Form Encoding
-  
-  [ISO 8601 encoded time](https://en.wikipedia.org/wiki/ISO_8601#Times)
-  
-* `datetime`
+     #### JSON Encoding
 
-  Calendar date and time. Datetimes MAY specify a time zone.
+     Built-in string datatype.
 
-  #### JSON encoding
-  
-  String containing exactly the [ISO 8601 encoded date time](https://en.wikipedia.org/wiki/ISO_8601#Combined_date_and_time_representations)
-  
-  #### Form Encoding
-  
-  [ISO 8601 encoded date time](https://en.wikipedia.org/wiki/ISO_8601#Combined_date_and_time_representations)
-  
-* sensitive
+     #### Form Encoding
 
-  `string` whose value should be obscured in the user interfaces and logs.
-  
-  #### JSON Encoding
-  
-  Built-in string datatype.
-  
-  #### Form Encoding
-  
-  UTF-8 encoded characters.
+     UTF-8 encoded characters.
 
-* hidden
-  
-  Field needed by the form's target but that is not user editable.
-  
-  #### JSON Encoding
-  
-  Use the field `value` verbatim.
-  
-  #### Form Encoding
-  
-  Use form encoding rule for the field `value`'s datatype.
-  
-* text
-  
-  Potentially long, multi-line, string. Analogous to textarea in HTML.
-  
-  #### JSON Encoding
-  
-  Built-in string datatype.
-  
-  #### Form Encoding
-  
-  UTF-8 encoded characters.
+   - `date`
 
-* `email`
+     Calendar date representing a specific year, month and day. Dates are independent of time zones.
 
-  Email address. Clients SHOULD encode email addresses as [RFC 6068 mailto URIs](https://tools.ietf.org/html/rfc6068). Servers MUST accept [RFC 6068 mailto URIs](https://tools.ietf.org/html/rfc6068). Servers SHOULD make a best effort attempt to extract an email address even if the value is not a `mailto` URI.
-  
-  #### JSON encoding
-  
-  String containing exactly an [RFC 6068 mailto URI](https://tools.ietf.org/html/rfc6068)
-  
-  #### Form Encoding
-  
-  [RFC 6068 mailto URI](https://tools.ietf.org/html/rfc6068)
+     #### JSON Encoding
 
-* `tel`
-  
-  Telephone numbers. Clients SHOULD encode telephone numbers as [RFC 3966 telephone URIs](https://tools.ietf.org/html/rfc3966). Servers MUST accept [RFC 3966 telephone URIs](https://tools.ietf.org/html/rfc3966). Servers SHOULD make a best effort attempt to extract a phone  number from value even if it is not a `tel` URI.
-  
-  #### JSON Encoding
-  
-  String containing exactly an [RFC 3966 telephone URI](https://tools.ietf.org/html/rfc3966)
-  
-  #### Form Encoding
-  
-  [RFC 3966 telephone URI](https://tools.ietf.org/html/rfc3966)
-  
-* `file`
+     String containing exactly the [ISO 8601 encoded calendar date](https://en.wikipedia.org/wiki/ISO_8601#Calendar_dates)
 
-  File picker. Value will be the contents of the selected file.
-  
-  Forms using this field type MUST use `multipart/form-data` as their `contentType`.
-  
-  #### JSON encoding
-  
-  Unsupported. This field type MUST NOT be used with JSON encoding.
-  
-  #### Form Encoding
+     #### Form Encoding
 
-  Attach contents of file as one part of the multipart document as define by [RFC 7578](https://tools.ietf.org/html/rfc7578)
+     [ISO 8601 encoded calendar date](https://en.wikipedia.org/wiki/ISO_8601#Calendar_dates)
 
+   - `time`
 
-### displayText
+     Time of day. Times MAY specify a time zone.
 
-OPTIONAL
+     #### JSON Encoding
 
-A string that describes the field. This MAY be used in place of a client's own display text.
+     String containing exactly the [ISO 8601 encoded time](https://en.wikipedia.org/wiki/ISO_8601#Times)
 
-### validations
+     #### Form Encoding
 
-OPTIONAL
+     [ISO 8601 encoded time](https://en.wikipedia.org/wiki/ISO_8601#Times)
 
-An object with rules that specify how the field MAY be validated.
+   - `datetime`
 
-Example validations:
+     Calendar date and time. Datetimes MAY specify a time zone.
 
+     #### JSON encoding
+     
+     String containing exactly the [ISO 8601 encoded date time](https://en.wikipedia.org/wiki/ISO_8601#Combined_date_and_time_representations)
+     
+     #### Form Encoding
+     
+     [ISO 8601 encoded date time](https://en.wikipedia.org/wiki/ISO_8601#Combined_date_and_time_representations)
+     
+   - sensitive
+
+     `string` whose value should be obscured in the user interfaces and logs.
+     
+     #### JSON Encoding
+     
+     Built-in string datatype.
+     
+     #### Form Encoding
+     
+     UTF-8 encoded characters.
+
+   - hidden
+     
+     Field needed by the form's target but that is not user editable.
+     
+     #### JSON Encoding
+     
+     Use the field `value` verbatim.
+     
+     #### Form Encoding
+     
+     Use form encoding rule for the field `value`'s datatype.
+     
+   - text
+     
+     Potentially long, multi-line, string. Analogous to textarea in HTML.
+     
+     #### JSON Encoding
+     
+     Built-in string datatype.
+     
+     #### Form Encoding
+     
+     UTF-8 encoded characters.
+
+   - `email`
+
+     Email address. Clients SHOULD encode email addresses as [RFC 6068 mailto URIs](https://tools.ietf.org/html/rfc6068). Servers MUST accept [RFC 6068 mailto URIs](https://tools.ietf.org/html/rfc6068). Servers SHOULD make a best effort attempt to extract an email address even if the value is not a `mailto` URI.
+     
+     #### JSON encoding
+     
+     String containing exactly an [RFC 6068 mailto URI](https://tools.ietf.org/html/rfc6068)
+     
+     #### Form Encoding
+     
+     [RFC 6068 mailto URI](https://tools.ietf.org/html/rfc6068)
+
+   - `tel`
+     
+     Telephone numbers. Clients SHOULD encode telephone numbers as [RFC 3966 telephone URIs](https://tools.ietf.org/html/rfc3966). Servers MUST accept [RFC 3966 telephone URIs](https://tools.ietf.org/html/rfc3966). Servers SHOULD make a best effort attempt to extract a phone  number from value even if it is not a `tel` URI.
+     
+     #### JSON Encoding
+     
+     String containing exactly an [RFC 3966 telephone URI](https://tools.ietf.org/html/rfc3966)
+     
+     #### Form Encoding
+     
+     [RFC 3966 telephone URI](https://tools.ietf.org/html/rfc3966)
+     
+   - `file`
+
+     File picker. Value will be the contents of the selected file.
+     
+     Forms using this field type MUST use `multipart/form-data` as their `contentType`.
+     
+     #### JSON encoding
+     
+     Unsupported. This field type MUST NOT be used with JSON encoding.
+     
+     #### Form Encoding
+
+     Attach contents of file as one part of the multipart document as define by [RFC 7578](https://tools.ietf.org/html/rfc7578)
+
+ - `displayText` (string, optional)
+
+   A human readable string that describes the field. This SHOULD be used in place of a client's own display text. Clients SHOULD use `name` if this is missing.
+
+ - `validations` ([validation](#validation), optional)
+
+   An object with rules specifying how values of the field MAY be validated.
+
+ - `accepted` (object, optional)
+
+   An object that indicates the exhaustive set of values accepted by the API for the field.
+
+   - One Of
+     - `values` (array[[value](#value)], required)
+
+       Simple list of acceptable values.
+
+     - `groupedValues` (array[[value group](#value-group)], required)
+
+       List of groups of values that are acceptable.
+
+ - `multiple` (boolean, optional)
+
+   A boolean value which indicates whether multiple values MAY be submitted for the field. Defaults to `false` if not provided, meaning multiple values MUST NOT be submitted. If provided and `true`, values MUST be submitted as a collection/array of values.
+
+## <a id="validation"/> Validation (object)
+
+A description of syntactic restrictions on the containing [field](#field). This information MAY be used by the client to provide feedback to users without requiring a round trip to the server. API providers MUST validate submitted forms for validity regardless of the validation information embedded in the form.
+
+Example validation object
 ```json
 "validations": {
 	"required": true,
@@ -418,66 +422,84 @@ Example validations:
 }
 ```
 
-### accepted
+### Properties
 
-OPTIONAL
+ - `required` (boolean, optional)
 
-An object that indicates a set of values accepted by the API for the given field. The value submitted MUST be one of the `value` properties from the list of `values` or `groupedValues`. The `values` and `groupedValues` properties MUST NOT appear at the same time in an `accepted` object within a field.
+   True indicates that forms submitted without a value for this field will be rejected by the API provider. API consumers SHOULD treat this as false if it is absent.
 
-#### multiple
+ - `regex` (string, optional)
 
-OPTIONAL
+   A [Perl compatible regular expression](https://en.wikipedia.org/wiki/Perl_Compatible_Regular_Expressions) describing allowed syntax of this field's values. API providers SHOULD omit this property unless the field type is `string` or `text`. API consumers MUST ignore this property unless the field type is `string` or `text`
 
-A boolean value which indicates whether multiple values MAY be submitted for the field. Defaults to `false` if not provided, meaning multiple values MUST NOT be submitted. If provided and `true`, values MUST be submitted as a collection/array of values.
 
-#### values
+## <a id="value-group"/> Value group (object)
 
-OPTIONAL
+A group of valid values for the containing [field](#field).
 
-A collection of [value objects](#value-object).
+Example of value group
 
-#### groupedValues
+```json
+{
+  "key": "MANUFACTURING",
+  "displayText": "Manufacturing",
+  "values": [
+    {
+      "value": "computers",
+      "key": "COMPUTER_AND_ELECTRONIC_PRODUCT_MANUFACTURING",
+      "displayText": "Computer and electronic product manufacturing"
+    },
+    {
+      "value": "furniture",
+      "key": "FURNITURE_AND_RELATED_PRODUCT_MANUFACTURING",
+      "displayText": "Furniture and related product manufacturing"
+    }
+  ]
+}
+```
 
-OPTIONAL
+### Properties
+ - `key` (string, required)
 
-A collections of [grouped value objects](#grouped-value-object).
+   An identifier for the group of values. Consumers MAY use this for identification and display.
 
-### <a name="value-object"></a> Value object
+ - `displayText` (string, optional)
 
-#### value
+   A human readable description of this value. If present, consumers SHOULD use this when displaying the value to users.
 
-REQUIRED
+ - `values` (array[[value](#value)], required)
 
-The value that MUST be included in the submission to the API.
+   List of values, one of which must be used in the form submission if this value group is selected.
 
-#### key
 
-REQUIRED
+## <a id="value"/> Value (object)
 
-A key that describes the value, which MAY be used for client side translation/display.
+A single valid value for the containing [field](#field).
 
-#### displayText
+```json
+{
+  "value": "breweries",
+  "key": "BREWERIES",
+  "displayText": "Breweries"
+},
+```
 
-OPTIONAL
+### Properties
+ - `key` (string, required)
 
-A string that describes the value. This MAY be used in place of a client's own display text for the accepted value.
+   An identifier for the value. Consumers MAY use this for identification and display.
 
-### <a name="grouped-value-object"></a> Grouped value object
+ - `displayText` (string, optional)
 
-#### key
+   A human readable description of this value. If present, consumers SHOULD use this when displaying the value to users.
 
-REQUIRED
+ - `value` (*, required)
 
-A key that describes the grouping, which MAY be used for client side translation/display.
+   The value that MUST be used in the form submission if this value is selected.
 
-#### displayText
 
-OPTIONAL
 
-A string that describes the group. This MAY be used in place of a client's own display text for the accepted value.
 
-#### values
 
-REQUIRED
 
-A collection of [value objects](#value-object).
+[link object]: https://tools.ietf.org/html/draft-kelly-json-hal-08#page-4

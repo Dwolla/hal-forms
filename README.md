@@ -456,7 +456,9 @@ The submission requests MUST
 
 ### Target URL resolution
 
-The target of a form MAY be a [templated link](https://tools.ietf.org/html/draft-kelly-json-hal-08#section-5.2). When this is the case the template must be expanded using the form fields in order to resolve it into a actual URL. Form fields must be converted in to a set of variable definitions whose values are the field values encoded using the [form value transcoding rules](#value-transcoding). The templated is then expanded using that set of variable definitions using the process define by [RFC 6570](https://tools.ietf.org/html/rfc6570).
+The target of a form MAY be a [templated link](https://tools.ietf.org/html/draft-kelly-json-hal-08#section-5.2). If the target link is not templated it's `href` MUST be used verbatim.
+
+When target link is a template it MUST be expanded using the form fields in order to resolve it into a actual URL. Form fields must be converted in to a set of variable definitions whose values are the field values encoded using the [form value transcoding rules](#value-transcoding). The templated is then expanded using that set of variable definitions using the process define by [RFC 6570](https://tools.ietf.org/html/rfc6570).
 
 For example, this form
 ```json
@@ -476,14 +478,14 @@ For example, this form
   ]
 }
 ```
-might resolve to any of the following
+might resolve to any of the following depending on the user input
  - `http://example.com/customers?cust_id=42`
  - `http://example.com/customers?name=frolic`
  - `http://example.com/customers?cust_id=42&name=frolic`
 
 A field MAY be used in both URL expansion and body construction.
 
-If the target link is not templated it's `href` MUST be used verbatim.
+API producers MUST NOT include fields on forms whose method is GET or DELETE and whose target link is non-templated. Client SHOULD ignore fields on forms whose method is GET or DELETE and whose target link is non-templated.
 
 ### Body construction
 

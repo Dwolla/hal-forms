@@ -282,6 +282,7 @@ Example field object
 
    Possible types at this time:
    - `boolean`
+ 
      True or false value.
 
    - `number`
@@ -290,7 +291,7 @@ Example field object
 
    - `string`
 
-     Short, probably single line, series of characters.
+     Short, probably single line, series of characters. Consumers should present the user with a single line text entry box.
 
    - `date`
 
@@ -308,13 +309,13 @@ Example field object
 
      `string` whose value should be obscured in the user interfaces and logs.
 
-   - hidden
+   - `hidden`
 
      Field needed by the form's target but that is not user editable.
 
-   - text
+   - `text`
 
-     Potentially long, multi-line, string. Analogous to textarea in HTML.
+     Potentially long, multi-line, string. Analogous to textarea in HTML. Consumers should present the user with a multi-line text entry area.
 
    - `email`
 

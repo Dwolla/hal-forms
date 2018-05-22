@@ -223,20 +223,23 @@ A form object is a recipe for making complex API requests.
 
  - `method` (enum, required)
 
-   The HTTP method to use when submitting this form. Consumers MUST ignore case of values.
+   The HTTP method to use when submitting this form. Consumers MUST ignore the case of values of this property.
 
-   Value MUST be one of the following:
+   Consumers SHOULD support the following values.
    - `GET`
    - `DELETE`
    - `PATCH`
    - `POST`
    - `PUT`
 
+    Producers MAY use values outside this set. Consumer SHOULD ignore forms whose `method` they don't understand. Forms with a `method` outside the list above will likely be ignored by most consumers.
+
+
  - `contentType` (string, optional)
 
    The media type of submissions required by the target resource. This should be the value of the `Content-Type` header. The `contentType` property is REQUIRED when `method` is  `PATCH`, `POST` or `PUT`.
 
-   Clients MUST accept `application/x-www-form-urlencoded`, `multipart/form-data`, `application/json` and any media type ending in `+json`. Servers SHOULD NOT use media types outside this set.
+   Consumers SHOULD accept `application/x-www-form-urlencoded`, `multipart/form-data`, `application/json` and any media type ending in `+json`. Producers MAY use media types outside this set. Consumers SHOULD ignore forms that use media types they don't understand. Forms with a content type outside the set above will likely be ignored by most consumers
 
    Clients MUST follow JSON encoding rules for media types ending in `+json`.
 

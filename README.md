@@ -557,15 +557,15 @@ true
 
  - `date`
 
-    Clients SHOULD encode dates as [ISO 8601 encoded calendar date](https://en.wikipedia.org/wiki/ISO_8601#Calendar_dates). Servers MUST accept [ISO 8601 encoded calendar date](https://en.wikipedia.org/wiki/ISO_8601#Calendar_dates). Servers MAY make a best effort attempt to extract a date even if the value is not a valid ISO 8601 date.
+    Clients SHOULD encode dates as [ISO 8601 encoded calendar date][]. Servers MUST accept [ISO 8601 encoded calendar date][]. Servers MAY make a best effort attempt to extract a date even if the value is not a valid ISO 8601 date.
 
  - `time`
 
-    Clients SHOULD encode times as [ISO 8601 encoded time](https://en.wikipedia.org/wiki/ISO_8601#Times). Servers MUST accept [ISO 8601 encoded time](https://en.wikipedia.org/wiki/ISO_8601#Times). Servers MAY make a best effort attempt to extract a time even if the value is not a valid ISO 8601 time.
+    Clients SHOULD encode times as [ISO 8601 encoded time][]. Servers MUST accept [ISO 8601 encoded time][]. Servers MAY make a best effort attempt to extract a time even if the value is not a valid ISO 8601 time.
 
  - `datetime`
 
-    Clients SHOULD encode date times as [ISO 8601 encoded date time](https://en.wikipedia.org/wiki/ISO_8601#Combined_date_and_time_representations). Servers MUST accept [ISO 8601 encoded date time](https://en.wikipedia.org/wiki/ISO_8601#Combined_date_and_time_representations). Servers MAY make a best effort attempt to extract a date and time even if the value is not a valid ISO 8601 date time.
+    Clients SHOULD encode date times as [ISO 8601 encoded date time][]. Servers MUST accept [ISO 8601 encoded date time][]. Servers MAY make a best effort attempt to extract a date and time even if the value is not a valid ISO 8601 date time.
 
  - sensitive
 
@@ -581,11 +581,11 @@ true
 
  - `email`
 
-   Clients SHOULD encode email addresses as [RFC 6068 mailto URI](https://tools.ietf.org/html/rfc6068). Servers MUST accept [RFC 6068 mailto URIs](https://tools.ietf.org/html/rfc6068). Servers SHOULD make a best effort attempt to extract an email address even if the value is not a `mailto` URI.
+   Clients SHOULD encode email addresses as [RFC 6068 mailto URI](https://tools.ietf.org/html/rfc6068). Servers MUST accept [RFC 6068 mailto URIs][]. Servers SHOULD make a best effort attempt to extract an email address even if the value is not a `mailto` URI.
 
  - `tel`
 
-   Clients SHOULD encode telephone numbers as [RFC 3966 telephone URIs](https://tools.ietf.org/html/rfc3966). Servers MUST accept [RFC 3966 telephone URIs](https://tools.ietf.org/html/rfc3966). Servers SHOULD make a best effort attempt to extract a phone  number from value even if it is not a `tel` URI.
+   Clients SHOULD encode telephone numbers as [RFC 3966 telephone URIs][]. Servers MUST accept [RFC 3966 telephone URIs][]. Servers SHOULD make a best effort attempt to extract a phone  number from value even if it is not a `tel` URI.
 
  - `file`
 
@@ -639,15 +639,15 @@ would encode into this body
 
  - `date`
 
-    Clients SHOULD encode dates as [ISO 8601 encoded calendar date](https://en.wikipedia.org/wiki/ISO_8601#Calendar_dates). Servers MUST accept [ISO 8601 encoded calendar date](https://en.wikipedia.org/wiki/ISO_8601#Calendar_dates). Servers MAY make a best effort attempt to extract a date even if the value is not a valid ISO 8601 date.
+    Clients SHOULD encode dates as [ISO 8601 encoded calendar date][]. Servers MUST accept [ISO 8601 encoded calendar date][]. Servers MAY make a best effort attempt to extract a date even if the value is not a valid ISO 8601 date.
 
  - `time`
 
-    Clients SHOULD encode times as [ISO 8601 encoded time](https://en.wikipedia.org/wiki/ISO_8601#Times). Servers MUST accept [ISO 8601 encoded time](https://en.wikipedia.org/wiki/ISO_8601#Times). Servers MAY make a best effort attempt to extract a time even if the value is not a valid ISO 8601 time.
+    Clients SHOULD encode times as [ISO 8601 encoded time][]. Servers MUST accept [ISO 8601 encoded time][]. Servers MAY make a best effort attempt to extract a time even if the value is not a valid ISO 8601 time.
 
  - `datetime`
 
-    Clients SHOULD encode date times as [ISO 8601 encoded date time](https://en.wikipedia.org/wiki/ISO_8601#Combined_date_and_time_representations). Servers MUST accept [ISO 8601 encoded date time](https://en.wikipedia.org/wiki/ISO_8601#Combined_date_and_time_representations). Servers MAY make a best effort attempt to extract a date and time even if the value is not a valid ISO 8601 date time.
+    Clients SHOULD encode date times as [ISO 8601 encoded date time][]. Servers MUST accept [ISO 8601 encoded date time][]. Servers MAY make a best effort attempt to extract a date and time even if the value is not a valid ISO 8601 date time.
 
  - sensitive
 
@@ -663,11 +663,11 @@ would encode into this body
 
  - `email`
 
-   Clients SHOULD encode email addresses as [RFC 6068 mailto URIs](https://tools.ietf.org/html/rfc6068). Servers MUST accept [RFC 6068 mailto URIs](https://tools.ietf.org/html/rfc6068). Servers SHOULD make a best effort attempt to extract an email address even if the value is not a `mailto` URI.
+   Clients SHOULD encode email addresses as [RFC 6068 mailto URIs][]. Servers MUST accept [RFC 6068 mailto URIs][]. Servers SHOULD make a best effort attempt to extract an email address even if the value is not a `mailto` URI.
 
  - `tel`
 
-   Clients SHOULD encode telephone numbers as [RFC 3966 telephone URIs](https://tools.ietf.org/html/rfc3966). Servers MUST accept [RFC 3966 telephone URIs](https://tools.ietf.org/html/rfc3966). Servers SHOULD make a best effort attempt to extract a phone  number from value even if it is not a `tel` URI.
+   Clients SHOULD encode telephone numbers as [RFC 3966 telephone URIs][]. Servers MUST accept [RFC 3966 telephone URIs][]. Servers SHOULD make a best effort attempt to extract a phone  number from value even if it is not a `tel` URI.
 
  - `file`
 
@@ -675,5 +675,9 @@ would encode into this body
 
 
 
-[link object]: https://tools.ietf.org/html/draft-kelly-json-hal-08#page-4
-
+[link object]: https://tools.ietf.org/html/draft-kelly-json-hal-08#section-5
+[RFC 3966 telephone URIs]: https://tools.ietf.org/html/rfc3966
+[RFC 6068 mailto URIs]: https://tools.ietf.org/html/rfc6068
+[ISO 8601 encoded date time]: https://en.wikipedia.org/wiki/ISO_8601#Combined_date_and_time_representations
+[ISO 8601 encoded time]: https://en.wikipedia.org/wiki/ISO_8601#Times
+[ISO 8601 encoded calendar date]: https://en.wikipedia.org/wiki/ISO_8601#Calendar_dates

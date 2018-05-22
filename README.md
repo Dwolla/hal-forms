@@ -272,7 +272,7 @@ Example field object
 
    A JSON Pointer ([RFC6901](http://tools.ietf.org/html/rfc6901)) to a field in a resource typically being created as a result of a submission to the API. The `path` property is REQUIRED when `contentType` is JSON. The `path` property SHOULD be omitted when the form's `method` is `GET` or `DELETE` or the `contentType` is `application/x-www-form-urlencoded` or `multipart/form-data`.
 
- - value (*, required)
+ - value (*, optional)
 
    The current/persisted value of the field.
 

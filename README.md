@@ -1,6 +1,6 @@
 # Dwolla HAL Form Profile
 
-* Version: 0.0.4
+* Version: 0.0.2
 * Status: Draft
 
 ## Description
@@ -54,7 +54,7 @@ Forms are well tested way to reduce the coupling between API consumers and provi
 
 ## Media Type
 
-This extension is to be used as a profile ([RFC6906](https://tools.ietf.org/html/rfc6906)) in conjunction with a HAL style media type.  API producers SHOULD include the profile attribute to make it easier for developers to access this documentation. API consumers MUST NOT rely on the profile being present.
+This extension is to be used as a profile link ([RFC6906](https://tools.ietf.org/html/rfc6906)) in conjunction with a HAL style media type.
 
 Examples
 
@@ -442,8 +442,6 @@ A single valid value for the containing [field](#field).
    The value that MUST be used in the form submission if this value is selected.
 
 ## Processing
-
-Forms capable API consumers SHOULD inspect all HAL representations for the `_forms` reserved property.
 
 To submit a form API consumers will
  1. collect information for each field from the user
